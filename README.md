@@ -6,3 +6,8 @@ Convert your MongoDB Ids to MYSQL Ids pattern
 This simple code convert a Mongo DB id format to use in MySQL DB.
 
 Code Valid only for PKs as it is, but you can modify to update any number of columns on the table, or also run for each table on the same script file.
+
+" HOW TO USE"
+
+1 - Put your configurations on the inc.config.php variables.
+2 - Run convertMongoIDtoMYSQL.php File on your server.
