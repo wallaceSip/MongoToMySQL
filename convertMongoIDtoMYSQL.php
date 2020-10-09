@@ -1,6 +1,6 @@
 <?php
-
-include_once ("path/to/connect.php"); // Include your DB connection
+include_once($DBFilePath); // Include your DB connection
+include_once ("inc.config.php"); 
 
 //64bits conversion function
 function get64BitNumber($str)
@@ -12,37 +12,49 @@ function get64BitNumber($str)
 
 //Table Select Ids
 //$connectionVariable from include connect file
-$convert_id = "select id_column1,id_column2 from table";
-$resultc = mysqli_query($connectionVariable,$convert_id);
-
+$select_id ="SELECT $idColumnName FROM $tableName";
+$resultc = mysqli_query($connectionVariable,$select_id);
 
 while ($row = mysqli_fetch_assoc($resultc)){
     
 //Id Column Names
-$id1 = $row["id"];
-$id1_2 = $row["anotherId"];
+$id1 = $row[$idColumnName];
 
 //Converting to 64bit number format
 $idc = get64BitNumber($id1);
-$idc1_2 = get64BitNumber($id1_2);
+
 
 
 //convert the 64bits format to 32bits
 $idc32_1 = gmp_and("0xffffffff", "$idc");
-$idc32_1_2 = gmp_and("0xffffffff", "$idc1_2");
+
 
 // ** if you want you can convert to less bits for lesser big Ids **
 
 
-//Update ID on bank
-$update_id ="UPDATE table SET id_column = '$idc32_1' WHERE id_column = '$id1'";
+//Update ID on DB Table
+$update_id ="UPDATE $tableName SET $idColumnName = '$idc32_1' WHERE $idColumnName = '$id1'";
 $resultadd = mysqli_query($connectionVariable,$update_id);
 
 }
 
 //Success or Error Message
 if($resultadd){ 
-    echo "<p style='color:green;'>Successfully Converted!</p>";
+    echo "<p style='color:green;margin-bottom:10px;'>Successfully Converted!</p>";
+
+    //Table With Data Fetching
+    echo "<table border='1'>";
+    echo "<tr>";
+    echo "<th>Not Converted</th>";
+    echo "<th>Converted</th>";
+    echo "<th>32bit</th>";
+    echo "</tr>";
+    echo "<tr>";
+    echo "<td>".$id1."</td>";
+    echo "<td>".$idc."</td>";
+    echo "<td>".$idc32_1."</td>";
+    echo "</tr>";
+    echo "</table>";
 
 }else{
 
